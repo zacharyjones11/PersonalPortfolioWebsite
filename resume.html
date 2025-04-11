@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resume &amp; Projects</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A personal portfolio site showcasing my resume, projects, and accomplishments.">
+  <meta name="author" content="Zachary Jones">
+  
+  <!-- Inline Critical CSS -->
+  <style>
+    /* Critical CSS for initial paint (above-the-fold) */
+    body {
+      font-family: Arial, sans-serif; 
+      background-color: #121212;
+      color: #eee;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    header {
+      background: #1e1e1e;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-right: 15px;
+    }
+    .container {
+      padding: 20px;
+    }
+    h2, h3 { text-align: center; }
+    /* (Add any other very-critical rules needed for your header, above-the-fold content, etc.) */
+  </style>
+  
+  <!-- Load the full CSS asynchronously -->
+  <link rel="preload" href="portfolio.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="portfolio.css">
+  </noscript>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="resume.html">Resume &amp; Projects</a>
+    </nav>
+    <button class="toggle-button" id="darkModeToggle">Toggle Dark/Light Mode</button>
+  </header>
+  <main class="container">
+    <!-- Your Resume Section -->
+    <div class="section" id="resumeSection">
+      <h2>Resume</h2>
+      <div id="education">
+        <h3>Education</h3>
+        <!-- Dynamic education entries inserted here -->
+      </div>
+      <div id="work">
+        <h3>Work Experience</h3>
+        <!-- Dynamic work entries inserted here -->
+      </div>
+      <div id="leadership">
+        <h3>Leadership Skills</h3>
+        <!-- Dynamic leadership content inserted here -->
+      </div>
+      <div id="references">
+        <h3>References</h3>
+        <!-- Dynamic references list inserted here -->
+      </div>
+    </div>
+    <!-- Projects Section placed at the end of the page -->
+    <div class="section" id="projectsSection">
+      <h2>Projects</h2>
+      <!-- The Firebase project will be inserted here dynamically -->
+    </div>
+  </main>
+  <footer>
+    <div class="footer-item">
+      <a href="https://www.linkedin.com/in/zachary-jones11/" target="_blank">
+        <img src="linked-in.jpg" alt="LinkedIn Logo" />
+      </a>
+    </div>
+    <div class="footer-item email">
+      <div>zacharybjones123@gmail.com</div>
+    </div>
+    <div class="footer-item">
+      &copy; Zachary Jones 2025
+    </div>
+  </footer>
+  <!-- Defer JavaScript -->
+  <script src="portfolio.js" defer></script>
+</body>
+</html>

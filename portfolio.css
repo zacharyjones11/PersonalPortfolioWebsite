@@ -1,0 +1,250 @@
+/* Base styles applied to both pages */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: #eee;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Header styling with flex layout: nav on left, toggle button on far right */
+header {
+  background: #1e1e1e;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Navigation styling */
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-right: 15px;
+}
+nav a:hover {
+  color:aqua;
+}
+
+/* Container layout */
+.container {
+  padding: 20px;
+}
+
+/* Paragraph styling to prevent stretching to the screen's edges */
+p {
+  max-width: 850px;   /* Limits the paragraph width */
+  margin-left: auto;  /* Centers horizontally */
+  margin-right: auto; /* Centers horizontally */
+  padding: 0 20px;    /* Adds some side spacing */
+  text-align: center; /* Centers the text inside */
+}
+
+/* Center text for the home page only */
+.home .container {
+  text-align: center;
+}
+
+/* Profile picture styling */
+.profile-pic {
+  border-radius: 20%;
+  width: 25%;
+  height: 25%;
+}
+
+/* Dark/Light toggle button styling (now in header, so no top margin) */
+.toggle-button {
+  padding: 10px 15px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin: 0;
+}
+
+.section h2 {
+  text-align: center;
+}
+
+/* Center all h3 headers inside the resume sections */
+.section h3 {
+  text-align: center;
+}
+
+/* Specifically center the leadership and references containers */
+#leadership, #references {
+  text-align: center;
+}
+
+/* Center the lists for leadership and references */
+.center-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  display: inline-block;
+  text-align: center; /* List items remain left-aligned within the centered block */
+}
+
+/* Styling for the resume and projects page sections */
+.section {
+  margin-bottom: 40px;
+}
+
+.project {
+  border: 1px solid #333;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.project img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Styles for the screenshots container */
+.screenshots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 10px;
+}
+.screenshots img {
+  width: 100%;
+  height: 100%;      /* Adjust percentage as needed */
+  max-width: 600px; /* Ensures they don't grow too large on wide screens */
+  height: auto;
+}
+
+/* Footer styling */
+footer {
+  background: #1e1e1e;
+  padding: 20px;
+  text-align: center;
+  margin-top: 30px;
+}
+
+footer .footer-item {
+  display: inline-block;
+  margin: 0 15px;
+  color: #eee;
+  font-size: 14px;
+}
+
+footer .footer-item a {
+  color: inherit;
+  text-decoration: none;
+}
+
+footer img {
+  vertical-align: middle;
+  width: 40px;
+  height: auto;
+  border-radius: 25%;
+}
+
+/* Optional: style for email hyperlink */
+.email a {
+  text-decoration: underline;
+}
+
+/* Light mode override */
+.light-mode {
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.light-mode header {
+  background: #ddd;
+}
+
+.light-mode nav a {
+  color: #333;
+}
+.light-mode nav a:hover {
+  color:blue;
+}
+
+
+.light-mode .toggle-button {
+  background-color: #ccc;
+  color: #333;
+}
+
+.light-mode footer {
+  background: #ddd;
+}
+
+.light-mode footer .footer-item {
+  color: #333;
+}
+
+/* Mobile adjustments for devices with a max-width of 480px (e.g., iPhone) */
+@media only screen and (max-width: 480px) {
+  body {
+    font-size: 16px;
+    padding: 10px;
+  }
+  
+  /* Header: Stack items vertically and center content on small screens */
+  header {
+    flex-direction: column;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  nav a {
+    margin-right: 10px;
+    font-size: 14px;
+  }
+  
+  .toggle-button {
+    margin-top: 10px;
+  }
+  
+  /* Reduce container padding */
+  .container {
+    padding: 10px;
+    margin: 0 auto;
+  }
+  
+  /* Adjust section headers for better readability */
+  .section h2,
+  .section h3 {
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  /* Adjust paragraphs */
+  p {
+    padding: 0 10px;
+    font-size: 16px;
+  }
+  
+  /* Enhance visibility of profile picture */
+  .profile-pic {
+    width: 50%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  /* Increase screenshot size for better visibility on small screens */
+  .screenshots img {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+  }
+  
+  /* Footer: Reduce padding and adjust font-size */
+  footer {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  footer .footer-item {
+    margin: 0 10px;
+  }
+}
