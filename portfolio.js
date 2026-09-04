@@ -120,12 +120,10 @@ const resumeData = {
   education: [
     {
       institution: "Brigham Young University–Idaho",
-      degree: "B.S., Cloud Computing (in progress)",
-      details: "Coursework: HTML, CSS, JavaScript, AWS, Firebase, Business Management"
-    },
-    {
-      institution: "Lee Williams High School",
-      degree: "High School Diploma"
+      degree: "B.S., Cloud Computing",
+      duration: "Jan 2023 – Apr 2027",
+      details:
+        "Coursework: IT, SQL, AWS, DevOps, Business Management. Side projects: built this site, set up Kali and Ubuntu Linux environments, and configured a Samba file share on Ubuntu."
     }
   ],
   work: [
@@ -134,54 +132,50 @@ const resumeData = {
       role: "IT Technician",
       duration: "Apr 2024 – Present",
       description:
-        "Troubleshoot OS, software, and hardware issues for faculty and staff, and support students at the walk-in help desk. Mentor newer technicians on complex tickets and manage a shared ticket queue to keep resolution times down."
+        "Resolve hardware and software tickets for 1,000+ faculty and administrators, and diagnose issues for students at the help desk in 30 minutes or less. Deploy and maintain Active Directory, Group Policy, and standard Microsoft and Adobe app installs."
     },
     {
-      company: "Funds4Education (Student Consultant)",
+      company: "Teton County",
+      role: "IT Intern",
+      duration: "Sep 2025 – Dec 2025",
+      description:
+        "Resolved hardware and software tickets for 300+ users across the county courthouse and police department. Took on early system-admin work — upgrading servers, hardening network security, and reconfiguring switches for faster access to shared files."
+    },
+    {
+      company: "Small Business Management (Student Consultant)",
       role: "Student Consultant",
       duration: "Mar – Apr 2025",
       description:
-        "Analyzed a small nonprofit's marketing process as part of a student consulting team and proposed ways to grow visibility through social media and affiliate partnerships."
+        "Consulted for Funds4Education, a scholarship-search startup, and presented 10+ strategies to grow traction through social media and affiliate marketing."
     },
     {
       company: "Kingman Bulldog Disposal",
-      role: "Security Camera Installer",
+      role: "Ubiquiti Camera Tech",
       duration: "Dec 2023",
       description:
-        "Installed and configured security cameras across multiple facility locations, including the software used to view recorded footage remotely."
-    },
-    {
-      company: "KRMC Del E. Webb Wellness Center",
-      role: "Lifeguard",
-      duration: "Jul 2020 – Sep 2021",
-      description:
-        "BLS and lifeguard certified; worked solo shifts monitoring swimmers, maintaining pool cleanliness, and checking chemical levels."
-    },
-    {
-      company: "City of Kingman",
-      role: "Lifeguard",
-      duration: "Jun–Aug 2020, Jun–Aug 2021",
-      description:
-        "Rotated through seasonal lifeguard positions monitoring swimmers and maintaining facilities."
-    },
-    {
-      company: "KRMC",
-      role: "Volunteer Help Desk Technician",
-      duration: "Jul – Nov 2019",
-      description: "Logged 65+ hours on the IS department's help desk team."
+        "Installed 10 security cameras across the facility and configured the Ubiquiti data server so footage could be viewed remotely at any time."
     }
   ],
   leadership: [
     {
-      title: "Eagle Scout, Boy Scouts of America",
-      duration: "Nov 2016",
+      title: "Student IT Project Lead, BYU–Idaho IT Technician",
+      duration: "Jun 2025 – Present",
       description:
-        "Earned merit badges in First Aid, Survival, and Water Safety; logged 30+ hours of community service; led younger scouts at Cub Scout Camp."
+        "Coordinate with 1,000+ faculty and administrators on office moves and device installs. Mentor newer technicians on complex tickets, assign work across a 20-person team, and lead the deployment and ticketing teams to a 100% completion rate each month."
     },
     {
-      title: "Missionary, The Church of Jesus Christ of Latter-day Saints",
-      duration: "Oct 2021 – Oct 2023",
-      description: "Served in a supervisory role leading and mentoring 15–25 fellow missionaries."
+      title: "Eagle Scout, Boy Scouts of America — Las Vegas Area Council",
+      duration: "Nov 2016",
+      description:
+        "Completed 30+ hours of community service and multiple merit badges; volunteered at Cub Scout Camp leading younger scouts through activities and challenges."
+    }
+  ],
+  certifications: [
+    {
+      title: "Comprehensive Cybersecurity Defense",
+      duration: "Cybersecurity Defense Initiative",
+      description:
+        "Completed 20+ hands-on labs in Red Team and Blue Team roles, using Kali Linux and Windows tools to both attack and defend a network environment."
     }
   ]
 };
@@ -201,6 +195,12 @@ function populateResume() {
     role.className = "resume-role";
     role.textContent = edu.degree;
     head.appendChild(role);
+    if (edu.duration) {
+      const duration = document.createElement("span");
+      duration.className = "resume-duration";
+      duration.textContent = edu.duration;
+      head.appendChild(duration);
+    }
     entry.appendChild(head);
 
     if (edu.details) {
@@ -259,6 +259,32 @@ function populateResume() {
 
     leadershipDiv.appendChild(entry);
   });
+
+  const certificationsDiv = document.getElementById("certifications");
+  if (certificationsDiv) {
+    resumeData.certifications.forEach((cert) => {
+      const entry = document.createElement("div");
+      entry.className = "resume-entry";
+
+      const head = document.createElement("div");
+      head.className = "resume-entry-head";
+      const h3 = document.createElement("h3");
+      h3.textContent = cert.title;
+      head.appendChild(h3);
+      const duration = document.createElement("span");
+      duration.className = "resume-duration";
+      duration.textContent = cert.duration;
+      head.appendChild(duration);
+      entry.appendChild(head);
+
+      const desc = document.createElement("p");
+      desc.className = "resume-desc";
+      desc.textContent = cert.description;
+      entry.appendChild(desc);
+
+      certificationsDiv.appendChild(entry);
+    });
+  }
 }
 
 /* ----------------------------------------------------------------
