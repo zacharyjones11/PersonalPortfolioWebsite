@@ -2,96 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Resume &amp; Projects</title>
+  <title>Resume — Zachary Jones</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A personal portfolio site showcasing my resume, projects, and accomplishments.">
+  <meta name="description" content="Resume for Zachary Jones — education, work experience, and leadership.">
   <meta name="author" content="Zachary Jones">
-  
-  <!-- Inline Critical CSS -->
-  <style>
-    /* Critical CSS for initial paint (above-the-fold) */
-    body {
-      font-family: Arial, sans-serif; 
-      background-color: #121212;
-      color: #eee;
-      margin: 0;
-      padding: 0;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    header {
-      background: #1e1e1e;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin-right: 15px;
-    }
-    .container {
-      padding: 20px;
-    }
-    h2, h3 { text-align: center; }
-    /* (Add any other very-critical rules needed for your header, above-the-fold content, etc.) */
-  </style>
-  
-  <!-- Load the full CSS asynchronously -->
-  <link rel="preload" href="portfolio.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript>
-    <link rel="stylesheet" href="portfolio.css">
-  </noscript>
+  <meta name="theme-color" content="#0b0e11">
+  <link rel="icon" href="favicon.ico">
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("theme");
+        var light = stored ? stored === "light" : window.matchMedia("(prefers-color-scheme: light)").matches;
+        if (light) document.documentElement.classList.add("light-mode");
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="portfolio.css">
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="resume.html">Resume &amp; Projects</a>
-    </nav>
-    <button class="toggle-button" id="darkModeToggle">Toggle Dark/Light Mode</button>
-  </header>
-  <main class="container">
-    <!-- Your Resume Section -->
-    <div class="section" id="resumeSection">
-      <h2>Resume</h2>
-      <div id="education">
-        <h3>Education</h3>
-        <!-- Dynamic education entries inserted here -->
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="wrapper">
+    <header class="site-header">
+      <a class="brand" href="index.html">zachary<span>.</span>jones</a>
+      <input type="checkbox" id="navToggle" class="nav-toggle">
+      <label for="navToggle" class="nav-toggle-label" aria-label="Toggle navigation menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="2" stroke-linecap="round">
+          <line x1="2" y1="5" x2="18" y2="5"></line>
+          <line x1="2" y1="10" x2="18" y2="10"></line>
+          <line x1="2" y1="15" x2="18" y2="15"></line>
+        </svg>
+      </label>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="resume.html" aria-current="page">Resume</a>
+      </nav>
+      <div class="header-actions">
+        <button class="toggle-button" id="darkModeToggle" aria-pressed="false">☀️ Light mode</button>
       </div>
-      <div id="work">
-        <h3>Work Experience</h3>
-        <!-- Dynamic work entries inserted here -->
+    </header>
+
+    <main id="main">
+      <div class="container" id="resumeSection">
+        <p class="eyebrow">Resume</p>
+        <h1>Experience &amp; background</h1>
+
+        <section class="resume-block" aria-labelledby="education-heading">
+          <p class="section-title" id="education-heading">Education</p>
+          <div id="education"></div>
+        </section>
+
+        <section class="resume-block" aria-labelledby="work-heading">
+          <p class="section-title" id="work-heading">Work Experience</p>
+          <div id="work"></div>
+        </section>
+
+        <section class="resume-block" aria-labelledby="leadership-heading">
+          <p class="section-title" id="leadership-heading">Leadership</p>
+          <div id="leadership"></div>
+        </section>
+
+        <section aria-labelledby="references-heading">
+          <p class="section-title" id="references-heading">References</p>
+          <p class="note">Available on request — feel free to reach out.</p>
+        </section>
       </div>
-      <div id="leadership">
-        <h3>Leadership Skills</h3>
-        <!-- Dynamic leadership content inserted here -->
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/zachary-jones11/" target="_blank" rel="noopener noreferrer">
+          <img class="footer-icon" src="linked-in.jpg" alt="" />
+          LinkedIn
+        </a>
+        <a id="contactEmail" href="#">Loading…</a>
       </div>
-      <div id="references">
-        <h3>References</h3>
-        <!-- Dynamic references list inserted here -->
-      </div>
-    </div>
-    <!-- Projects Section placed at the end of the page -->
-    <div class="section" id="projectsSection">
-      <h2>Projects</h2>
-      <!-- The Firebase project will be inserted here dynamically -->
-    </div>
-  </main>
-  <footer>
-    <div class="footer-item">
-      <a href="https://www.linkedin.com/in/zachary-jones11/" target="_blank">
-        <img src="linked-in.jpg" alt="LinkedIn Logo" />
-      </a>
-    </div>
-    <div class="footer-item email">
-      <div>zacharybjones123@gmail.com</div>
-    </div>
-    <div class="footer-item">
-      &copy; Zachary Jones 2025
-    </div>
-  </footer>
-  <!-- Defer JavaScript -->
+      <div class="footer-copy">&copy; 2026 Zachary Jones</div>
+    </footer>
+  </div>
   <script src="portfolio.js" defer></script>
 </body>
 </html>

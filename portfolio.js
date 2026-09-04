@@ -1,244 +1,438 @@
-/* script.js */
+/* portfolio.js — theme toggle, mobile nav, and content rendering */
 
-// ----------------------------
-// Dark/Light Mode Toggle Logic
-// ----------------------------
-function toggleDarkMode() {
-  const body = document.body;
-  // Conditional branching: check if light-mode is active
-  if (body.classList.contains('light-mode')) {
-    body.classList.remove('light-mode');
-  } else {
-    body.classList.add('light-mode');
+/* ----------------------------------------------------------------
+   Theme: the initial choice (system preference, or a remembered
+   explicit pick) is applied by a small blocking script in <head>
+   before first paint, so there's no flash. This file just keeps the
+   toggle button and future clicks in sync with that.
+   ---------------------------------------------------------------- */
+function safeGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch (e) {
+    return null;
+  }
+}
+function safeSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {
+    /* private browsing, storage disabled, etc. — theme just won't persist */
   }
 }
 
-// ----------------------------
-// DOM Content Loaded: Setup Listeners and Populate Content
-// ----------------------------
-document.addEventListener('DOMContentLoaded', function() {
-  // Add event listener for dark mode toggle (present on both pages)
-  const darkModeButton = document.getElementById('darkModeToggle');
+function applyTheme(light) {
+  document.documentElement.classList.toggle("light-mode", light);
+  const btn = document.getElementById("darkModeToggle");
+  if (btn) {
+    btn.setAttribute("aria-pressed", String(light));
+    btn.textContent = light ? "🌙 Dark mode" : "☀️ Light mode";
+  }
+}
+
+function toggleTheme() {
+  const isLight = !document.documentElement.classList.contains("light-mode");
+  applyTheme(isLight);
+  safeSet("theme", isLight ? "light" : "dark");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // The pre-paint script in <head> already applied the class; just sync the button label.
+  applyTheme(document.documentElement.classList.contains("light-mode"));
+
+  const darkModeButton = document.getElementById("darkModeToggle");
   if (darkModeButton) {
-    darkModeButton.addEventListener('click', toggleDarkMode);
+    darkModeButton.addEventListener("click", toggleTheme);
   }
 
-  // Populate resume sections if on resume.html
-  if (document.getElementById('resumeSection')) {
+  // Obfuscated contact email — assembled at runtime to slow down scrapers.
+  const emailEl = document.getElementById("contactEmail");
+  if (emailEl) {
+    const user = ["z", "a", "c", "h", "a", "r", "y", "b", "j", "o", "n", "e", "s", "1", "2", "3"].join("");
+    const domain = ["g", "m", "a", "i", "l", ".", "c", "o", "m"].join("");
+    const address = user + "@" + domain;
+    emailEl.href = "mailto:" + address;
+    emailEl.textContent = address;
+  }
+
+  if (document.getElementById("skillsSection")) {
+    populateSkills();
+  }
+  if (document.getElementById("resumeSection")) {
     populateResume();
   }
-  // Populate projects section if on resume.html
-  if (document.getElementById('projectsSection')) {
+  if (document.getElementById("projectsSection")) {
     populateProjects();
+    initLightbox();
   }
 });
 
-// ----------------------------
-// Resume Data and Population Function
-// ----------------------------
+/* ----------------------------------------------------------------
+   Skills
+   ---------------------------------------------------------------- */
+const skillsData = [
+  {
+    category: "Languages & Web",
+    items: ["HTML", "CSS", "JavaScript"]
+  },
+  {
+    category: "Mobile Development",
+    items: ["Swift", "SwiftUI", "SwiftData", "Flutter", "Dart"]
+  },
+  {
+    category: "Cloud & Infrastructure",
+    items: ["AWS", "Firebase", "Proxmox VE", "Linux"]
+  },
+  {
+    category: "IT & Support",
+    items: ["Windows & macOS troubleshooting", "Help desk ticketing", "Hardware diagnostics", "Networking basics"]
+  }
+];
 
-/* Resume Data and Population Function – Updated with Your Resume Details */
+function populateSkills() {
+  const grid = document.getElementById("skillsSection");
+  skillsData.forEach((group) => {
+    const card = document.createElement("div");
+    card.className = "skill-card";
+
+    const h3 = document.createElement("h3");
+    h3.textContent = group.category;
+    card.appendChild(h3);
+
+    const row = document.createElement("div");
+    row.className = "chip-row";
+    group.items.forEach((item) => {
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = item;
+      row.appendChild(chip);
+    });
+    card.appendChild(row);
+
+    grid.appendChild(card);
+  });
+}
+
+/* ----------------------------------------------------------------
+   Resume data
+   ---------------------------------------------------------------- */
 const resumeData = {
   education: [
     {
-      institution: "Lee Williams High School",
-      degree: "High School Diploma"
-      // Optionally add a year property, e.g. year: "2018"
+      institution: "Brigham Young University–Idaho",
+      degree: "B.S., Cloud Computing (in progress)",
+      details: "Coursework: HTML, CSS, JavaScript, AWS, Firebase, Business Management"
     },
     {
-      institution: "Brigham Young University of Idaho",
-      degree: "Cloud Computing Major",
-      details: "HTML, CSS, JavaScript, AWS, Firebase, Business Management"
-      // Optionally add a year property if needed
+      institution: "Lee Williams High School",
+      degree: "High School Diploma"
     }
   ],
   work: [
     {
-      company: "Brigham Young University of Idaho",
+      company: "Brigham Young University–Idaho",
       role: "IT Technician",
-      duration: "April 2024 – Present",
+      duration: "Apr 2024 – Present",
       description:
-        "Successfully resolved a variety of technical issues for faculty and administrators on-campus, including operating system, software, application, and hardware problems. Provided comprehensive assistance to students at the help desk, addressed software-related concerns with efficiency and professionalism, took on a team leader role mentoring beginner technicians with complex tickets, and efficiently managed a ticket queue to optimize workflow."
+        "Troubleshoot OS, software, and hardware issues for faculty and staff, and support students at the walk-in help desk. Mentor newer technicians on complex tickets and manage a shared ticket queue to keep resolution times down."
+    },
+    {
+      company: "Funds4Education (Student Consultant)",
+      role: "Student Consultant",
+      duration: "Mar – Apr 2025",
+      description:
+        "Analyzed a small nonprofit's marketing process as part of a student consulting team and proposed ways to grow visibility through social media and affiliate partnerships."
     },
     {
       company: "Kingman Bulldog Disposal",
       role: "Security Camera Installer",
       duration: "Dec 2023",
       description:
-        "Installed new security cameras in multiple locations at the facility and set up the software for each camera so that users can view recorded footage anytime."
+        "Installed and configured security cameras across multiple facility locations, including the software used to view recorded footage remotely."
     },
     {
       company: "KRMC Del E. Webb Wellness Center",
       role: "Lifeguard",
-      duration: "July 2020 – Sept 2021",
+      duration: "Jul 2020 – Sep 2021",
       description:
-        "BLS/Lifeguard certified; acted as a solo lifeguard on duty, monitored swimmers, performed basic cleaning and mopping of the pool area, maintained pool cleanliness, and checked chemical levels."
+        "BLS and lifeguard certified; worked solo shifts monitoring swimmers, maintaining pool cleanliness, and checking chemical levels."
     },
     {
       company: "City of Kingman",
       role: "Lifeguard",
-      duration: "June-Aug 2020 and June-Aug 2021",
+      duration: "Jun–Aug 2020, Jun–Aug 2021",
       description:
-        "Served in rotating lifeguard positions, monitored swimmers, and performed basic cleaning duties."
+        "Rotated through seasonal lifeguard positions monitoring swimmers and maintaining facilities."
     },
     {
       company: "KRMC",
       role: "Volunteer Help Desk Technician",
-      duration: "July-Nov 2019",
-      description:
-        "Volunteered in the IS department as part of the Help Desk team for over 65 hours."
-    },
-    {
-      company: "Small Business Management (Student Consultant)",
-      role: "Student Consultant",
-      duration: "March-April 2025",
-      description:
-        "As a member of the student team for Funds4Education in Rexburg, ID, performed process analysis to discover ways to increase the course's visibility via social media, Instagram, and affiliate marketing."
+      duration: "Jul – Nov 2019",
+      description: "Logged 65+ hours on the IS department's help desk team."
     }
   ],
   leadership: [
-    "Eagle Scout, BSA – November 2016: Earned merit badges in First Aid, Survival, and Water Safety; completed over 30 hours of community service; and volunteered at Cub Scout Camp leading young scouts.",
-    "Missionary for The Church of Jesus Christ of Latter-day Saints – Oct 2021 to Oct 2023: Served as a leader overseeing 15-25 missionaries."
-  ],
-  references: [
-    "Dr. Adam Dawson, KRMC ER, 928-757-2101",
-    "Scott Theis, Theiss@byui.edu, 208-496-7123"
+    {
+      title: "Eagle Scout, Boy Scouts of America",
+      duration: "Nov 2016",
+      description:
+        "Earned merit badges in First Aid, Survival, and Water Safety; logged 30+ hours of community service; led younger scouts at Cub Scout Camp."
+    },
+    {
+      title: "Missionary, The Church of Jesus Christ of Latter-day Saints",
+      duration: "Oct 2021 – Oct 2023",
+      description: "Served in a supervisory role leading and mentoring 15–25 fellow missionaries."
+    }
   ]
 };
 
 function populateResume() {
-  // EDUCATION Section
   const educationDiv = document.getElementById("education");
-  if (resumeData.education && resumeData.education.length > 0) {
-    resumeData.education.forEach((edu) => {
-      let eduText = edu.institution;
-      if (edu.degree) eduText += " — " + edu.degree;
-      if (edu.year) eduText += " (" + edu.year + ")";
-      if (edu.details) eduText += " - " + edu.details;
-      const eduItem = document.createElement("p");
-      eduItem.textContent = eduText;
-      educationDiv.appendChild(eduItem);
-    });
-  } else {
-    educationDiv.innerHTML += "<p>No education info available.</p>";
-  }
+  resumeData.education.forEach((edu) => {
+    const entry = document.createElement("div");
+    entry.className = "resume-entry";
 
-  // WORK EXPERIENCE Section
+    const head = document.createElement("div");
+    head.className = "resume-entry-head";
+    const h3 = document.createElement("h3");
+    h3.textContent = edu.institution;
+    head.appendChild(h3);
+    const role = document.createElement("span");
+    role.className = "resume-role";
+    role.textContent = edu.degree;
+    head.appendChild(role);
+    entry.appendChild(head);
+
+    if (edu.details) {
+      const details = document.createElement("p");
+      details.className = "resume-details";
+      details.textContent = edu.details;
+      entry.appendChild(details);
+    }
+    educationDiv.appendChild(entry);
+  });
+
   const workDiv = document.getElementById("work");
-  if (resumeData.work && resumeData.work.length > 0) {
-    resumeData.work.forEach((job) => {
-      const headerItem = document.createElement("p");
-      headerItem.textContent =
-        job.company + " — " + job.role + " (" + job.duration + ")";
-      workDiv.appendChild(headerItem);
-      if (job.description) {
-        const jobDesc = document.createElement("p");
-        jobDesc.textContent = job.description;
-        workDiv.appendChild(jobDesc);
-      }
-    });
-  } else {
-    workDiv.innerHTML += "<p>No work experience info available.</p>";
-  }
+  resumeData.work.forEach((job) => {
+    const entry = document.createElement("div");
+    entry.className = "resume-entry";
 
-  // LEADERSHIP Section
+    const head = document.createElement("div");
+    head.className = "resume-entry-head";
+    const h3 = document.createElement("h3");
+    h3.textContent = job.company + " — " + job.role;
+    head.appendChild(h3);
+    const duration = document.createElement("span");
+    duration.className = "resume-duration";
+    duration.textContent = job.duration;
+    head.appendChild(duration);
+    entry.appendChild(head);
+
+    const desc = document.createElement("p");
+    desc.className = "resume-desc";
+    desc.textContent = job.description;
+    entry.appendChild(desc);
+
+    workDiv.appendChild(entry);
+  });
+
   const leadershipDiv = document.getElementById("leadership");
-  if (resumeData.leadership && resumeData.leadership.length > 0) {
-    const leadershipList = document.createElement("ul");
-    leadershipList.className = "center-list";
-    resumeData.leadership.forEach((leadershipSentence) => {
-      var sentence = leadershipSentence; // variable for each sentence
-      const li = document.createElement("li");
-      li.textContent = sentence;
-      leadershipList.appendChild(li);
-    });
-    leadershipDiv.appendChild(leadershipList);
-  } else {
-    leadershipDiv.innerHTML += "<p>No leadership info available.</p>";
-  }
+  resumeData.leadership.forEach((item) => {
+    const entry = document.createElement("div");
+    entry.className = "resume-entry";
 
-  // REFERENCES Section
-  const referencesDiv = document.getElementById("references");
-  if (resumeData.references && resumeData.references.length > 0) {
-    const referencesList = document.createElement("ul");
-    referencesList.className = "center-list";
-    resumeData.references.forEach((referenceSentence) => {
-      var sentence = referenceSentence; // variable for each sentence
-      const li = document.createElement("li");
-      li.textContent = sentence;
-      referencesList.appendChild(li);
-    });
-    referencesDiv.appendChild(referencesList);
-  } else {
-    referencesDiv.innerHTML += "<p>No references info available.</p>";
-  }
+    const head = document.createElement("div");
+    head.className = "resume-entry-head";
+    const h3 = document.createElement("h3");
+    h3.textContent = item.title;
+    head.appendChild(h3);
+    const duration = document.createElement("span");
+    duration.className = "resume-duration";
+    duration.textContent = item.duration;
+    head.appendChild(duration);
+    entry.appendChild(head);
+
+    const desc = document.createElement("p");
+    desc.className = "resume-desc";
+    desc.textContent = item.description;
+    entry.appendChild(desc);
+
+    leadershipDiv.appendChild(entry);
+  });
 }
 
-
-// ----------------------------
-// Projects Data and Population Function
-// ----------------------------
-
-// Array of project objects demonstrating usage of objects and array methods
-// Define the project data (only one project in this case)
+/* ----------------------------------------------------------------
+   Projects
+   ---------------------------------------------------------------- */
 const projectsData = [
   {
-    title: "Firebase Database Project",
-    screenshots: [
-      "webapp-firebase.png",
-      "products-firebase.png",
-      "suppliers-firebase.png",
-      "users-firebase.png",
-      "login-firebase.png"
-    ],
+    title: "myPill-Pal",
+    status: "live",
+    statusLabel: "Live on the App Store",
+    icon: "assets/img/pillpal-icon.png",
     description:
-      "The screenshots above showcase the creation of my custom database using Firebase. I developed a web application that connects with my Firebase database, enabling the dynamic display of products and their quantities. Each modification—such as adding or removing items—automatically updates the database in real time, ensuring accurate synchronization between the front-end interface and the back-end system. Additionally, user login activity is logged and reflected within the database, as shown in the final screenshot. This project demonstrates my ability to design and implement a functional database-driven application, complete with real-time data updates and user activity tracking."
+      "A medication tracker for iPhone and iPad. Scan a pill bottle label and VisionKit's on-device OCR pulls the name, dosage, and refill date straight into the form. Reminders run through UserNotifications, a dashboard shows what's due today, and a history log tracks doses and streaks over time — synced between iPhone and iPad, with full light and dark mode support.",
+    tags: ["Swift", "SwiftUI", "SwiftData", "VisionKit", "UserNotifications"],
+    links: [{ label: "View on the App Store", url: "https://apps.apple.com/us/app/mypill-pal/id6773116787" }],
+    screenshots: [
+      { src: "assets/img/pillpal-medications.png", alt: "myPill-Pal medication list on iPhone" },
+      { src: "assets/img/pillpal-details.png", alt: "myPill-Pal medication detail screen on iPhone" },
+      { src: "assets/img/pillpal-add.png", alt: "myPill-Pal add medication screen with label scanning" },
+      { src: "assets/img/pillpal-ipad.png", alt: "myPill-Pal medication list on iPad" }
+    ]
+  },
+  {
+    title: "Brain Bloom",
+    status: "progress",
+    statusLabel: "In Progress",
+    icon: "assets/img/brain-bloom.png",
+    description:
+      "A flashcard app that turns studying into keeping a plant alive. Every card you review earns water; pour it in and the plant grows toward flourishing, skip too many days and it wilts — with decay accelerating the closer an exam gets. The scoring, growth, and decay rules live in a standalone engine with unit tests, kept out of the UI so the balance can be tuned without touching a single screen.",
+    tags: ["Flutter", "Dart", "Provider", "SQLite (sqflite)"],
+    links: [],
+    screenshots: []
+  },
+  {
+    title: "Homelab Hypervisor",
+    status: "progress",
+    statusLabel: "In Progress",
+    icon: null,
+    description:
+      "Turning a spare machine into a personal Proxmox VE server — a free, open-source hypervisor that runs full Linux and Windows VMs through KVM alongside lightweight LXC containers, all from one web console. Building it out as a home lab: a place to spin up isolated environments for testing, self-host backends for projects like Brain Bloom, and learn cluster storage and networking hands-on.",
+    tags: ["Proxmox VE", "KVM", "LXC", "Linux", "Networking"],
+    links: [],
+    screenshots: []
   }
 ];
 
-// Populate the Projects section at the end of the second page.
 function populateProjects() {
-  const projectsSection = document.getElementById("projectsSection");
-  
-  // Loop over the projects (only one in this case)
-  projectsData.forEach(project => {
-    // Create a container for the project
-    const projectDiv = document.createElement("div");
-    projectDiv.className = "project";
-    
-    // Create and append the project title
-    const title = document.createElement("h3");
-    title.textContent = project.title;
-    projectDiv.appendChild(title);
-    
-    // Create and append the screenshots container (in order)
-    if (project.screenshots && project.screenshots.length > 0) {
-      const screenshotsContainer = document.createElement("div");
-      screenshotsContainer.className = "screenshots";
-      project.screenshots.forEach(imageSrc => {
-        const img = document.createElement("img");
-        img.src = imageSrc;
-        img.alt = project.title + " screenshot";
-        screenshotsContainer.appendChild(img);
+  const section = document.getElementById("projectsSection");
+
+  projectsData.forEach((project) => {
+    const card = document.createElement("div");
+    card.className = "project-card";
+
+    const head = document.createElement("div");
+    head.className = "project-head";
+
+    const titleRow = document.createElement("div");
+    titleRow.className = "project-title-row";
+    if (project.icon) {
+      const icon = document.createElement("img");
+      icon.className = "project-icon";
+      icon.src = project.icon;
+      icon.alt = "";
+      icon.loading = "lazy";
+      titleRow.appendChild(icon);
+    }
+    const h3 = document.createElement("h3");
+    h3.textContent = project.title;
+    titleRow.appendChild(h3);
+    head.appendChild(titleRow);
+
+    const badge = document.createElement("span");
+    badge.className = "status-badge " + (project.status === "live" ? "status-live" : "status-progress");
+    badge.textContent = project.statusLabel;
+    head.appendChild(badge);
+
+    card.appendChild(head);
+
+    const desc = document.createElement("p");
+    desc.textContent = project.description;
+    card.appendChild(desc);
+
+    if (project.tags && project.tags.length) {
+      const tagRow = document.createElement("div");
+      tagRow.className = "tag-row";
+      project.tags.forEach((tag) => {
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.textContent = tag;
+        tagRow.appendChild(chip);
       });
-      projectDiv.appendChild(screenshotsContainer);
+      card.appendChild(tagRow);
     }
-    
-    // Create and append the project description
-    if (project.description) {
-      const desc = document.createElement("p");
-      desc.textContent = project.description;
-      projectDiv.appendChild(desc);
+
+    if (project.links && project.links.length) {
+      const linkRow = document.createElement("div");
+      linkRow.className = "project-links";
+      project.links.forEach((link) => {
+        const a = document.createElement("a");
+        a.href = link.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = link.label + " ↗";
+        linkRow.appendChild(a);
+      });
+      card.appendChild(linkRow);
     }
-    
-    // Append the project block to the projects section
-    projectsSection.appendChild(projectDiv);
+
+    if (project.screenshots && project.screenshots.length) {
+      const shots = document.createElement("div");
+      shots.className = "screenshots";
+      project.screenshots.forEach((shot) => {
+        const img = document.createElement("img");
+        img.src = shot.src;
+        img.alt = shot.alt;
+        img.loading = "lazy";
+        img.tabIndex = 0;
+        img.setAttribute("role", "button");
+        img.setAttribute("aria-label", "View larger: " + shot.alt);
+        shots.appendChild(img);
+      });
+      card.appendChild(shots);
+    }
+
+    section.appendChild(card);
+  });
+}
+
+/* ----------------------------------------------------------------
+   Screenshot lightbox
+   ---------------------------------------------------------------- */
+function initLightbox() {
+  const lightbox = document.createElement("div");
+  lightbox.className = "lightbox";
+  lightbox.id = "lightbox";
+
+  const closeBtn = document.createElement("button");
+  closeBtn.className = "lightbox-close";
+  closeBtn.setAttribute("aria-label", "Close image preview");
+  closeBtn.textContent = "×";
+  lightbox.appendChild(closeBtn);
+
+  const img = document.createElement("img");
+  img.alt = "";
+  lightbox.appendChild(img);
+  document.body.appendChild(lightbox);
+
+  function open(src, alt) {
+    img.src = src;
+    img.alt = alt;
+    lightbox.classList.add("open");
+    closeBtn.focus();
+  }
+  function close() {
+    lightbox.classList.remove("open");
+  }
+
+  document.addEventListener("click", (e) => {
+    const target = e.target;
+    if (target.closest(".screenshots img")) {
+      open(target.src, target.alt);
+    } else if (target === lightbox || target === closeBtn) {
+      close();
+    }
   });
 
-  
-  // Demonstrate usage of reduce: count total characters in project titles.
-  const totalChars = projectsData.reduce((sum, project) => sum + project.title.length, 0);
-  const charsInfo = document.createElement('p');
-  charsInfo.textContent = `Total characters in project title: ${totalChars}`;
-  projectsSection.appendChild(charsInfo);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+    if (
+      e.key === "Enter" &&
+      document.activeElement &&
+      document.activeElement.matches(".screenshots img")
+    ) {
+      open(document.activeElement.src, document.activeElement.alt);
+    }
+  });
 }
