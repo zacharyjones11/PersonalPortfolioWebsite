@@ -328,6 +328,39 @@ const projectsData = [
     tags: ["Proxmox VE", "KVM", "LXC", "Linux", "Networking"],
     links: [],
     screenshots: []
+  },
+  {
+    title: "Zombie Survival",
+    status: "progress",
+    statusLabel: "In Progress",
+    icon: null,
+    description:
+      "A zombie survival game in early development for iOS, aimed at a future App Store release. Still in the foundational stage — core gameplay systems first, with art, levels, and polish to follow.",
+    tags: ["iOS", "Swift", "Game Development"],
+    links: [],
+    screenshots: []
+  },
+  {
+    title: "Clip (iOS Clipboard Manager)",
+    status: "progress",
+    statusLabel: "In Progress",
+    icon: null,
+    description:
+      "An iOS app that keeps a running history of everything you copy — a built-in feature on Android that iOS still doesn't have. The goal is a fast, native-feeling way to find and reuse anything recently copied, instead of losing it the moment you copy something new.",
+    tags: ["iOS", "Swift", "Productivity"],
+    links: [],
+    screenshots: []
+  },
+  {
+    title: "Azure AD Automation",
+    status: "planned",
+    statusLabel: "Planned",
+    icon: null,
+    description:
+      "A planned project for hands-on Azure Active Directory experience: PowerShell scripts to automate adding new users and managing their IAM role assignments, instead of doing it by hand through the portal. Next up after the homelab — applying the identity-management work from the help desk to cloud infrastructure. No code yet.",
+    tags: ["Azure", "Active Directory", "PowerShell", "IAM"],
+    links: [],
+    screenshots: []
   }
 ];
 
@@ -357,7 +390,13 @@ function populateProjects() {
     head.appendChild(titleRow);
 
     const badge = document.createElement("span");
-    badge.className = "status-badge " + (project.status === "live" ? "status-live" : "status-progress");
+    badge.className =
+      "status-badge " +
+      (project.status === "live"
+        ? "status-live"
+        : project.status === "planned"
+        ? "status-planned"
+        : "status-progress");
     badge.textContent = project.statusLabel;
     head.appendChild(badge);
 
